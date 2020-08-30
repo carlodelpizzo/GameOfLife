@@ -77,21 +77,13 @@ submit.grid(row=4, column=1)
 i1 = "SPACE to Pause / Unpause. While paused, press N or RIGHT to advance one stage."
 i2 = "Make cell alive with left mouse, kill with right mouse. K to kill all cells. "
 i3 = "Hold T to speed up advancement."
-# i4 = "While paused, press N to advance stage"
-# i5 = "K to kill all cells"
-# i6 = "Hold T to speed up stage advancement"
+
 label1 = tk.Label(root, text=i1, wraplength=200, justify='left')
 label2 = tk.Label(root, text=i2, wraplength=200, justify='left')
 label3 = tk.Label(root, text=i3, wraplength=200, justify='left')
-# label4 = tk.Label(root, text=i4)
-# label5 = tk.Label(root, text=i5)
-# label6 = tk.Label(root, text=i6)
+
 label1.grid(row=5, column=0, columnspan=2, sticky='W')
 label2.grid(row=6, column=0, columnspan=2, sticky='W')
 label3.grid(row=7, column=0, columnspan=2, sticky='W')
-# label4.grid(row=8, column=0, columnspan=2, sticky='W')
-# label5.grid(row=9, column=0, columnspan=2, sticky='W')
-# label6.grid(row=10, column=0, columnspan=2, sticky='W')
-
 
 root.mainloop()
