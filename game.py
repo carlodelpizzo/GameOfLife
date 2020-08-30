@@ -4,12 +4,11 @@ from pygame.locals import *
 
 def game(screen_width, screen_height, rows, cols):
     pygame.init()
-
-    # Initialize Screen
+    # Initialize screen
     screen = pygame.display.set_mode((screen_width, screen_height))
     # Title
     pygame.display.set_caption("Life")
-    # Screen Colors
+    # Screen colors
     bg_color = [0, 0, 0]
     fg_color = [50, 100, 200]
     divider_color = [50, 50, 50]
@@ -42,7 +41,7 @@ def game(screen_width, screen_height, rows, cols):
         def find_neighbors(self):
             self.neighbors = []
 
-            # Neighbors on Row Above
+            # Neighbors on row above
             if 0 <= self.index - cols - 1 <= len(cells) - 1:
                 if cells[self.index - cols - 1].pos[1] == self.pos[1] - 1:
                     if cells[self.index - cols - 1].alive:
@@ -56,7 +55,7 @@ def game(screen_width, screen_height, rows, cols):
                     if cells[self.index - cols + 1].alive:
                         self.neighbors.append(cells[self.index - cols + 1])
 
-            # Neighbors on Same Row
+            # Neighbors on same row
             if 0 <= self.index - 1 <= len(cells) - 1:
                 if cells[self.index - 1].pos[1] == self.pos[1] - 1:
                     if cells[self.index - 1].alive:
@@ -66,7 +65,7 @@ def game(screen_width, screen_height, rows, cols):
                     if cells[self.index + 1].alive:
                         self.neighbors.append(cells[self.index + 1])
 
-            # Neighbors on Row Below
+            # Neighbors on row below
             if 0 <= self.index + cols - 1 <= len(cells) - 1:
                 if cells[self.index + cols - 1].pos[1] == self.pos[1] - 1:
                     if cells[self.index + cols - 1].alive:
@@ -121,9 +120,10 @@ def game(screen_width, screen_height, rows, cols):
 
     cells = init_cells(rows, cols)
     clock = pygame.time.Clock()
-    frame_rate = 144
+    frame_rate = 240
     slowed_rate = 10
     pause = True
+    turbo = False
     drag_mouse = False
     removing = False
     running = True
@@ -134,8 +134,8 @@ def game(screen_width, screen_height, rows, cols):
                 break
 
             keys = pygame.key.get_pressed()
+            # Key down events
             if event.type == pygame.KEYDOWN:
-
                 # Pause/Unpause
                 if keys[K_SPACE] and not pause:
                     pause = True
@@ -145,7 +145,22 @@ def game(screen_width, screen_height, rows, cols):
                 if keys[K_k]:
                     for i in range(len(cells)):
                         cells[i].alive = False
+                # Turbo
+                if keys[K_t] and not turbo:
+                    turbo = True
+                # Advance one stage
+                if (keys[K_RIGHT] or keys[K_n]) and pause:
+                    for i in range(len(cells)):
+                        cells[i].find_neighbors()
+                    for i in range(len(cells)):
+                        cells[i].advance()
 
+            # Key up events
+            if event.type == pygame.KEYUP:
+                if not keys[K_t] and turbo:
+                    turbo = False
+
+            # Drawing cells with mouse
             if event.type == pygame.MOUSEBUTTONDOWN and not drag_mouse:
                 drag_mouse = True
                 if event.button == 3:
@@ -156,14 +171,17 @@ def game(screen_width, screen_height, rows, cols):
                 drag_mouse = False
                 removing = False
 
-        # Game Advancement
+        # Game advancement
         if not pause:
             screen.fill(divider_color)
             for i in range(len(cells)):
                 cells[i].find_neighbors()
             for i in range(len(cells)):
                 cells[i].advance()
-            clock.tick(slowed_rate)
+            if not turbo:
+                clock.tick(slowed_rate)
+            else:
+                clock.tick(frame_rate)
         else:
             screen.fill(divider_color_paused)
             if drag_mouse:
