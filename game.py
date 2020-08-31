@@ -27,17 +27,11 @@ def game(screen_width, screen_height, rows, cols, ran):
             self.pos = pos
             self.neighbors = []
 
-        def draw(self):
-            pygame.draw.rect(screen, fg_color, (int(self.x), int(self.y), int(self.width), int(self.height)))
-
-        def clear(self):
-            pygame.draw.rect(screen, bg_color, (int(self.x), int(self.y), int(self.width), int(self.height)))
-
         def update_screen(self):
             if self.alive:
-                self.draw()
+                pygame.draw.rect(screen, fg_color, (int(self.x), int(self.y), int(self.width), int(self.height)))
             elif not self.alive:
-                self.clear()
+                pygame.draw.rect(screen, bg_color, (int(self.x), int(self.y), int(self.width), int(self.height)))
 
         def find_neighbors(self):
             self.neighbors = []
