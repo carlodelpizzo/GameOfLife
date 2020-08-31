@@ -85,7 +85,6 @@ def start_game():
     if good:
         root.withdraw()
         game(w, h, r, c, ran.get())
-        root.update()
         root.deiconify()
     else:
         blink(width_entry, height_entry, rows_entry, cols_entry)

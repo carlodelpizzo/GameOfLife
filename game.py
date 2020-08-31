@@ -94,10 +94,9 @@ def game(screen_width, screen_height, rows, cols, ran):
         for row in range(num_rows):
             for col in range(num_cols):
                 index = (row * num_cols) + col
-                cell_array.append(index)
                 x_offset = pad_x + (cell_w + pad_x) * col
                 y_offset = pad_y + (cell_h + pad_y) * row
-                cell_array[index] = Cell(x_offset, y_offset, cell_w, cell_h, index, (row, col))
+                cell_array.append(Cell(x_offset, y_offset, cell_w, cell_h, index, (row, col)))
         return cell_array
 
     def mouse_draw():
@@ -114,6 +113,7 @@ def game(screen_width, screen_height, rows, cols, ran):
                     break
 
     cells = init_cells(rows, cols)
+    # Randomize cells
     if ran:
         for i in range(len(cells)):
             a = random.randint(1, 2)
@@ -132,7 +132,9 @@ def game(screen_width, screen_height, rows, cols, ran):
     removing = False
     running = True
     while running:
+        # Event Loop
         for event in pygame.event.get():
+            # Close Window
             if event.type == pygame.QUIT:
                 running = False
                 break
@@ -149,7 +151,6 @@ def game(screen_width, screen_height, rows, cols, ran):
                 if keys[K_k]:
                     for i in range(len(cells)):
                         cells[i].alive = False
-
                 # Randomize cells
                 if keys[K_r]:
                     for i in range(len(cells)):
@@ -179,30 +180,32 @@ def game(screen_width, screen_height, rows, cols, ran):
                     slow = False
 
             # Drawing cells with mouse
+            # Mouse button down
             if event.type == pygame.MOUSEBUTTONDOWN and not drag_mouse:
                 drag_mouse = True
                 if event.button == 3:
                     removing = True
                 mouse_draw()
+            # Mouse button up
             elif event.type == pygame.MOUSEBUTTONUP and drag_mouse:
                 mouse_draw()
                 drag_mouse = False
                 removing = False
 
-        # Game advancement
+        # Cell stage advancement
         if not pause:
             screen.fill(divider_color)
             for i in range(len(cells)):
                 cells[i].find_neighbors()
             for i in range(len(cells)):
                 cells[i].advance()
+
             if not turbo and not slow:
                 clock.tick(slowed_rate)
             elif not turbo and slow:
                 clock.tick(int(slowed_rate/4))
             else:
                 clock.tick(frame_rate)
-
         else:
             screen.fill(divider_color_paused)
             if drag_mouse:
@@ -211,6 +214,8 @@ def game(screen_width, screen_height, rows, cols, ran):
 
         for i in range(len(cells)):
             cells[i].update_screen()
+
         pygame.display.flip()
+
     pygame.display.quit()
     pygame.quit()
