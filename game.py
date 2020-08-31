@@ -133,6 +133,7 @@ def game(screen_width, screen_height, rows, cols, ran):
     slowed_rate = 10
     pause = True
     turbo = False
+    slow = False
     drag_mouse = False
     removing = False
     running = True
@@ -166,6 +167,9 @@ def game(screen_width, screen_height, rows, cols, ran):
                 # Turbo
                 if keys[K_t] and not turbo:
                     turbo = True
+                # Slow mode
+                if keys[K_s] and not slow:
+                    slow = True
                 # Advance one stage
                 if (keys[K_RIGHT] or keys[K_n]) and pause:
                     for i in range(len(cells)):
@@ -177,6 +181,8 @@ def game(screen_width, screen_height, rows, cols, ran):
             if event.type == pygame.KEYUP:
                 if not keys[K_t] and turbo:
                     turbo = False
+                if not keys[K_s] and slow:
+                    slow = False
 
             # Drawing cells with mouse
             if event.type == pygame.MOUSEBUTTONDOWN and not drag_mouse:
@@ -196,10 +202,13 @@ def game(screen_width, screen_height, rows, cols, ran):
                 cells[i].find_neighbors()
             for i in range(len(cells)):
                 cells[i].advance()
-            if not turbo:
+            if not turbo and not slow:
                 clock.tick(slowed_rate)
+            elif not turbo and slow:
+                clock.tick(int(slowed_rate/4))
             else:
                 clock.tick(frame_rate)
+
         else:
             screen.fill(divider_color_paused)
             if drag_mouse:

@@ -131,7 +131,7 @@ start_but.grid(row=4, column=1)
 # Instructions
 i1 = "SPACE to Pause. While paused, press N or RIGHT to advance one stage."
 i2 = "Give cell life with left mouse, kill with right mouse."
-i3 = "K to kill all cells. R to randomize cells. Hold T to speed up advancement."
+i3 = "K to kill all cells. R to randomize cells. Hold T to speed up advancement. Hold S to slow down advancement"
 
 instruction1 = tk.Label(root, text=i1, wraplength=200, justify='left')
 instruction2 = tk.Label(root, text=i2, wraplength=200, justify='left')
