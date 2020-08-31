@@ -1,8 +1,9 @@
 import pygame
 from pygame.locals import *
+import random
 
 
-def game(screen_width, screen_height, rows, cols):
+def game(screen_width, screen_height, rows, cols, ran):
     pygame.init()
     # Initialize screen
     screen = pygame.display.set_mode((screen_width, screen_height))
@@ -119,6 +120,14 @@ def game(screen_width, screen_height, rows, cols):
                     break
 
     cells = init_cells(rows, cols)
+    if ran:
+        for i in range(len(cells)):
+            a = random.randint(1, 2)
+            if a % 2 == 0:
+                cells[i].alive = True
+            else:
+                cells[i].alive = False
+
     clock = pygame.time.Clock()
     frame_rate = 240
     slowed_rate = 10
@@ -145,6 +154,15 @@ def game(screen_width, screen_height, rows, cols):
                 if keys[K_k]:
                     for i in range(len(cells)):
                         cells[i].alive = False
+
+                # Randomize cells
+                if keys[K_r]:
+                    for i in range(len(cells)):
+                        a = random.randint(1, 2)
+                        if a % 2 == 0:
+                            cells[i].alive = True
+                        else:
+                            cells[i].alive = False
                 # Turbo
                 if keys[K_t] and not turbo:
                     turbo = True
