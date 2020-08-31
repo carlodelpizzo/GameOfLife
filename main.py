@@ -128,16 +128,18 @@ start_but = tk.Button(root, text='Start Game', command=start_game)
 start_but.grid(row=4, column=1)
 
 # Instructions
-i1 = "SPACE to Pause. While paused, press N or RIGHT to advance one stage."
-i2 = "Give cell life with left mouse, kill with right mouse."
-i3 = "K to kill all cells. R to randomize cells. Hold T to speed up advancement. Hold S to slow down advancement"
+i1 = "SPACE to Pause. While paused:"
+i2 = "K to kill all cells. R to randomize cells. Press N or Right Arrow to advance one stage.\
+ Left mouse to give cell life, right mouse to kill."
+i3 = "Hold T to speed up advancement. Hold S to slow down advancement"
 
-instruction1 = tk.Label(root, text=i1, wraplength=200, justify='left')
-instruction2 = tk.Label(root, text=i2, wraplength=200, justify='left')
-instruction3 = tk.Label(root, text=i3, wraplength=200, justify='left')
+instruction1 = tk.Label(root, text=i1, wraplength=230, justify='left')
+instruction2 = tk.Label(root, text=i2, wraplength=230, justify='left')
+instruction3 = tk.Label(root, text=i3, wraplength=230, justify='left')
 
-instruction1.grid(row=5, column=0, columnspan=2, sticky='W')
-instruction2.grid(row=6, column=0, columnspan=2, sticky='W')
-instruction3.grid(row=7, column=0, columnspan=2, sticky='W')
+instruction1.grid(row=5, column=0, columnspan=3, sticky='W')
+instruction2.grid(row=6, column=0, columnspan=3, sticky='W')
+instruction3.grid(row=7, column=0, columnspan=3, sticky='W')
+
 
 root.mainloop()

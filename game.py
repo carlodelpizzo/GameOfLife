@@ -14,6 +14,10 @@ def game(screen_width, screen_height, rows, cols, ran):
     fg_color = [50, 100, 200]
     divider_color = [50, 50, 50]
     divider_color_paused = [50, 25, 25]
+    # Font
+    font_size = 25
+    font_face = "Helvetica"
+    font = pygame.font.SysFont(font_face, 25)
 
     class Cell:
         def __init__(self, x, y, w, h, index, pos):
@@ -125,6 +129,7 @@ def game(screen_width, screen_height, rows, cols, ran):
     clock = pygame.time.Clock()
     frame_rate = 240
     slowed_rate = 10
+    cell_stage = 0
     pause = True
     turbo = False
     slow = False
@@ -148,17 +153,19 @@ def game(screen_width, screen_height, rows, cols, ran):
                 elif keys[K_SPACE] and pause:
                     pause = False
                 # Kill all cells
-                if keys[K_k]:
+                if keys[K_k] and pause:
                     for i in range(len(cells)):
                         cells[i].alive = False
+                    cell_stage = 0
                 # Randomize cells
-                if keys[K_r]:
+                if keys[K_r] and pause:
                     for i in range(len(cells)):
                         a = random.randint(1, 2)
                         if a % 2 == 0:
                             cells[i].alive = True
                         else:
                             cells[i].alive = False
+                        cell_stage = 0
                 # Turbo
                 if keys[K_t] and not turbo:
                     turbo = True
@@ -171,6 +178,7 @@ def game(screen_width, screen_height, rows, cols, ran):
                         cells[i].find_neighbors()
                     for i in range(len(cells)):
                         cells[i].advance()
+                    cell_stage += 1
 
             # Key up events
             if event.type == pygame.KEYUP:
@@ -199,6 +207,7 @@ def game(screen_width, screen_height, rows, cols, ran):
                 cells[i].find_neighbors()
             for i in range(len(cells)):
                 cells[i].advance()
+            cell_stage += 1
 
             if not turbo and not slow:
                 clock.tick(slowed_rate)
@@ -212,8 +221,13 @@ def game(screen_width, screen_height, rows, cols, ran):
                 mouse_draw()
             clock.tick(frame_rate)
 
+        # Visually update cells
         for i in range(len(cells)):
             cells[i].update_screen()
+
+        # Visually update cell stage counter
+        display_stage = font.render(str(cell_stage), True, (255, 255, 255))
+        screen.blit(display_stage, (0, 0))
 
         pygame.display.flip()
 
