@@ -29,58 +29,53 @@ def start_game():
             root.update()
 
     good = True
-    w = h = r = c = 0
     if width_entry.get().isnumeric():
         w = int(width_entry.get())
+        if w == 0:
+            width_entry.delete(0, 'end')
+            width_entry.insert(0, str(default_screen_width))
+            root.update()
+            w = default_screen_width
+        elif w < 0:
+            w = -w
     else:
         good = False
 
     if height_entry.get().isnumeric():
         h = int(height_entry.get())
+        if h == 0:
+            height_entry.delete(0, 'end')
+            height_entry.insert(0, str(default_screen_height))
+            root.update()
+            h = default_screen_height
+        elif h < 0:
+            h = -h
     else:
         good = False
 
     if rows_entry.get().isnumeric():
         r = int(rows_entry.get())
+        if r == 0:
+            rows_entry.delete(0, 'end')
+            rows_entry.insert(0, str(default_rows))
+            root.update()
+            r = default_rows
+        elif r < 0:
+            r = -r
     else:
         good = False
 
     if cols_entry.get().isnumeric():
         c = int(cols_entry.get())
+        if c == 0:
+            cols_entry.delete(0, 'end')
+            cols_entry.insert(0, str(default_cols))
+            root.update()
+            c = default_cols
+        elif c < 0:
+            c = -c
     else:
         good = False
-
-    if w == 0:
-        width_entry.delete(0, 'end')
-        width_entry.insert(0, str(default_screen_width))
-        root.update()
-        w = default_screen_width
-    elif w < 0:
-        w = -w
-
-    if h == 0:
-        height_entry.delete(0, 'end')
-        height_entry.insert(0, str(default_screen_height))
-        root.update()
-        h = default_screen_height
-    elif h < 0:
-        h = -h
-
-    if r == 0:
-        rows_entry.delete(0, 'end')
-        rows_entry.insert(0, str(default_rows))
-        root.update()
-        r = default_rows
-    elif r < 0:
-        r = -r
-
-    if c == 0:
-        cols_entry.delete(0, 'end')
-        cols_entry.insert(0, str(default_cols))
-        root.update()
-        c = default_cols
-    elif c < 0:
-        c = -c
 
     if good:
         root.withdraw()
