@@ -28,7 +28,7 @@ def start_game():
             time.sleep(0.20)
             root.update()
 
-    good = True
+    we_good = True
     if width_entry.get().isnumeric():
         w = int(width_entry.get())
         if w == 0:
@@ -39,7 +39,7 @@ def start_game():
         elif w < 0:
             w = -w
     else:
-        good = False
+        we_good = False
 
     if height_entry.get().isnumeric():
         h = int(height_entry.get())
@@ -51,7 +51,7 @@ def start_game():
         elif h < 0:
             h = -h
     else:
-        good = False
+        we_good = False
 
     if rows_entry.get().isnumeric():
         r = int(rows_entry.get())
@@ -63,7 +63,7 @@ def start_game():
         elif r < 0:
             r = -r
     else:
-        good = False
+        we_good = False
 
     if cols_entry.get().isnumeric():
         c = int(cols_entry.get())
@@ -75,9 +75,9 @@ def start_game():
         elif c < 0:
             c = -c
     else:
-        good = False
+        we_good = False
 
-    if good:
+    if we_good:
         root.withdraw()
         game(w, h, r, c, ran.get())
         root.deiconify()

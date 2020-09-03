@@ -100,6 +100,15 @@ def game(screen_width, screen_height, rows, cols, ran):
                 index = (row * num_cols) + col
                 x_offset = pad_x + (cell_w + pad_x) * col
                 y_offset = pad_y + (cell_h + pad_y) * row
+                # Round up cells (x, y) coordinates
+                if x_offset % 1 != 0:
+                    x_offset = int(x_offset + 1)
+                else:
+                    x_offset = int(x_offset)
+                if y_offset % 1 != 0:
+                    y_offset = int(y_offset + 1)
+                else:
+                    y_offset = int(y_offset)
                 cell_array.append(Cell(x_offset, y_offset, cell_w, cell_h, index, (row, col)))
         return cell_array
 
@@ -147,6 +156,10 @@ def game(screen_width, screen_height, rows, cols, ran):
             keys = pygame.key.get_pressed()
             # Key down events
             if event.type == pygame.KEYDOWN:
+                # Close Window
+                if (keys[K_LCTRL] or keys[K_RCTRL]) and keys[K_w]:
+                    running = False
+                    break
                 # Pause/Unpause
                 if keys[K_SPACE] and not pause:
                     pause = True
