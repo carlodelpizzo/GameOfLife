@@ -29,6 +29,7 @@ def start_game():
             root.update()
 
     we_good = True
+    w = h = r = c = None
     if width_entry.get().isnumeric():
         w = int(width_entry.get())
         if w == 0:
