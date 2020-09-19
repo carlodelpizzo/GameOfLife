@@ -9,8 +9,9 @@ root.resizable(False, False)
 
 default_screen_width = 420
 default_screen_height = 420
-default_rows = 20
-default_cols = 20
+default_rows = 69
+default_cols = 69
+entry_font = 'Helvetica'
 
 
 def start_game():
@@ -89,34 +90,35 @@ def start_game():
 # Enter Width
 width_label = tk.Label(root, text='Screen width in pixels:')
 width_label.grid(row=0, column=0, sticky='E')
-width_entry = tk.Entry(root, font=('Helvetica', 12), width=10)
+width_entry = tk.Entry(root, font=(entry_font, 12), width=10)
 width_entry.grid(row=0, column=1)
 width_entry.insert(0, str(default_screen_width))
 
 # Enter Height
 height_label = tk.Label(root, text='Screen height in pixels:')
 height_label.grid(row=1, column=0, sticky='E')
-height_entry = tk.Entry(root, font=('Helvetica', 12), width=10)
+height_entry = tk.Entry(root, font=(entry_font, 12), width=10)
 height_entry.grid(row=1, column=1)
 height_entry.insert(0, str(default_screen_height))
 
 # Enter Rows
 rows_label = tk.Label(root, text='Number of rows:')
 rows_label.grid(row=2, column=0, sticky='E')
-rows_entry = tk.Entry(root, font=('Helvetica', 12), width=10)
+rows_entry = tk.Entry(root, font=(entry_font, 12), width=10)
 rows_entry.grid(row=2, column=1)
 rows_entry.insert(0, str(default_rows))
 
 # Enter Cols
 cols_label = tk.Label(root, text='Number of columns:')
 cols_label.grid(row=3, column=0, sticky='E')
-cols_entry = tk.Entry(root, font=('Helvetica', 12), width=10)
+cols_entry = tk.Entry(root, font=(entry_font, 12), width=10)
 cols_entry.grid(row=3, column=1)
 cols_entry.insert(0, str(default_cols))
 
 # Randomize Checkbox
 ran = tk.BooleanVar()
 ran_ch_box = tk.Checkbutton(root, text='Randomize cells', variable=ran, onvalue=True, offvalue=False)
+ran_ch_box.select()
 ran_ch_box.grid(row=4, column=0)
 
 # Start Game Button

@@ -13,7 +13,7 @@ def game(screen_width, screen_height, rows, cols, ran=False):
     black = [0, 0, 0]
     white = [255, 255, 255]
     fg_color = [50, 100, 200]
-    divider_color = [50, 50, 50]
+    divider_color = [25, 25, 25]
     divider_color_paused = [50, 25, 25]
     # Font
     font_size = 25
@@ -40,7 +40,7 @@ def game(screen_width, screen_height, rows, cols, ran=False):
 
         def update_screen(self):
             if self.alive and not paused:
-                pygame.draw.rect(screen, divider_color, (self.x, self.y, self.width, self.height))
+                pygame.draw.rect(screen, black, (self.x, self.y, self.width, self.height))
                 pygame.draw.rect(screen, self.color, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
             elif not self.alive and not paused:
                 pygame.draw.rect(screen, divider_color, (self.x, self.y, self.width, self.height))
@@ -81,7 +81,11 @@ def game(screen_width, screen_height, rows, cols, ran=False):
     def advance_stage():
         next_stage = {}
         for p in cell_dict:
-            next_stage[p] = cell_dict[p].alive_next_stage()
+            if not cell_dict[p].alive:
+                continue
+            for np in cell_dict[p].neighbors:
+                if np in cell_dict and np not in next_stage:
+                    next_stage[np] = cell_dict[np].alive_next_stage()
         for p in next_stage:
             cell_dict[p].alive = next_stage[p]
 
