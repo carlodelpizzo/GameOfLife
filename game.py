@@ -83,6 +83,8 @@ def game(screen_width, screen_height, rows, cols, ran=False):
         for p in cell_dict:
             if not cell_dict[p].alive:
                 continue
+            if p not in next_stage:
+                next_stage[p] = cell_dict[p].alive_next_stage()
             for np in cell_dict[p].neighbors:
                 if np in cell_dict and np not in next_stage:
                     next_stage[np] = cell_dict[np].alive_next_stage()
