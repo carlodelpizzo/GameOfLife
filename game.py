@@ -17,7 +17,7 @@ def game(screen_width, screen_height, rows, cols, ran):
     # Font
     font_size = 25
     font_face = "Helvetica"
-    font = pygame.font.SysFont(font_face, 25)
+    font = pygame.font.SysFont(font_face, font_size)
 
     class Cell:
         def __init__(self, x, y, w, h, index, pos):
@@ -116,24 +116,23 @@ def game(screen_width, screen_height, rows, cols, ran):
         mouse_pos = pygame.mouse.get_pos()
         border_x = (screen_width / cols - cells[0].width) * cols / (cols + 1)
         border_y = (screen_height / rows - cells[0].height) * rows / (rows + 1)
-        for c in range(len(cells)):
-            if cells[c].x - border_x <= mouse_pos[0] <= cells[c].x + cells[c].width + border_x:
-                if cells[c].y - border_y <= mouse_pos[1] <= cells[c].y + cells[c].height + border_y:
+        for c in cells:
+            if c.x - border_x <= mouse_pos[0] <= c.x + c.width + border_x:
+                if c.y - border_y <= mouse_pos[1] <= c.y + c.height + border_y:
                     if not removing:
-                        cells[c].alive = True
+                        c.alive = True
                     elif removing:
-                        cells[c].alive = False
+                        c.alive = False
                     break
 
     cells = init_cells(rows, cols)
     # Randomize cells
     if ran:
-        for i in range(len(cells)):
-            a = random.randint(1, 2)
-            if a % 2 == 0:
-                cells[i].alive = True
+        for cell in cells:
+            if random.randint(1, 2) % 2 == 0:
+                cell.alive = True
             else:
-                cells[i].alive = False
+                cell.alive = False
 
     clock = pygame.time.Clock()
     frame_rate = 240
@@ -167,18 +166,17 @@ def game(screen_width, screen_height, rows, cols, ran):
                     pause = False
                 # Kill all cells
                 if keys[K_k] and pause:
-                    for i in range(len(cells)):
-                        cells[i].alive = False
+                    for cell in cells:
+                        cell.alive = False
                     cell_stage = 0
                 # Randomize cells
                 if keys[K_r] and pause:
-                    for i in range(len(cells)):
-                        a = random.randint(1, 2)
-                        if a % 2 == 0:
-                            cells[i].alive = True
+                    for cell in cells:
+                        if random.randint(1, 2) % 2 == 0:
+                            cell.alive = True
                         else:
-                            cells[i].alive = False
-                        cell_stage = 0
+                            cell.alive = False
+                    cell_stage = 0
                 # Turbo
                 if keys[K_t] and not turbo:
                     turbo = True
@@ -200,7 +198,6 @@ def game(screen_width, screen_height, rows, cols, ran):
                 if not keys[K_s] and slow:
                     slow = False
 
-            # Drawing cells with mouse
             # Mouse button down
             if event.type == pygame.MOUSEBUTTONDOWN and not drag_mouse:
                 drag_mouse = True
@@ -216,10 +213,10 @@ def game(screen_width, screen_height, rows, cols, ran):
         # Cell stage advancement
         if not pause:
             screen.fill(divider_color)
-            for i in range(len(cells)):
-                cells[i].find_neighbors()
-            for i in range(len(cells)):
-                cells[i].advance()
+            for cell in cells:
+                cell.find_neighbors()
+            for cell in cells:
+                cell.advance()
             cell_stage += 1
 
             if not turbo and not slow:
@@ -235,8 +232,8 @@ def game(screen_width, screen_height, rows, cols, ran):
             clock.tick(frame_rate)
 
         # Visually update cells
-        for i in range(len(cells)):
-            cells[i].update_screen()
+        for cell in cells:
+            cell.update_screen()
 
         # Visually update cell stage counter
         display_stage = font.render(str(cell_stage), True, (255, 255, 255))
