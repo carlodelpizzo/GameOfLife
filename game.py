@@ -67,29 +67,39 @@ def game(screen_width, screen_height, rows, cols, ran=False):
             else:
                 return False
 
+        def give_life(self):
+            self.alive = True
+            alive_cells.append(self.pos)
+
+        def give_death(self):
+            self.alive = False
+            if self.pos in alive_cells:
+                alive_cells.pop(alive_cells.index(self.pos))
+
     def mouse_draw():
         mouse_pos = pygame.mouse.get_pos()
         for p in cell_dict:
             if cell_dict[p].x <= mouse_pos[0] <= cell_dict[p].x + cell_dict[p].width:
                 if cell_dict[p].y <= mouse_pos[1] <= cell_dict[p].y + cell_dict[p].height:
                     if not removing:
-                        cell_dict[p].alive = True
+                        cell_dict[p].give_life()
                     elif removing:
-                        cell_dict[p].alive = False
+                        cell_dict[p].give_death()
                     break
 
     def advance_stage():
         next_stage = {}
-        for p in cell_dict:
-            if not cell_dict[p].alive:
-                continue
+        for p in alive_cells:
             if p not in next_stage:
                 next_stage[p] = cell_dict[p].alive_next_stage()
             for np in cell_dict[p].neighbors:
                 if np in cell_dict and np not in next_stage:
                     next_stage[np] = cell_dict[np].alive_next_stage()
         for p in next_stage:
-            cell_dict[p].alive = next_stage[p]
+            if next_stage[p]:
+                cell_dict[p].give_life()
+            else:
+                cell_dict[p].give_death()
 
     def resize(new_width, new_height):
         if new_width == screen_width and new_height == screen_height:
@@ -132,6 +142,7 @@ def game(screen_width, screen_height, rows, cols, ran=False):
                         cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
 
     cell_dict = {}
+    alive_cells = []
     cell_w = screen_width / cols
     cell_h = screen_height / rows
     for row in range(rows):
@@ -143,9 +154,9 @@ def game(screen_width, screen_height, rows, cols, ran=False):
     if ran:
         for pos in cell_dict:
             if random.randint(1, 2) % 2 == 0:
-                cell_dict[pos].alive = True
+                cell_dict[pos].give_life()
             else:
-                cell_dict[pos].alive = False
+                cell_dict[pos].give_death()
 
     clock = pygame.time.Clock()
     frame_rate = 60
@@ -182,15 +193,15 @@ def game(screen_width, screen_height, rows, cols, ran=False):
                 # Kill all cells
                 if keys[K_k] and paused:
                     for pos in cell_dict:
-                        cell_dict[pos].alive = False
+                        cell_dict[pos].give_death()
                     cell_stage = 0
                 # Randomize cells
                 if keys[K_r] and paused:
                     for pos in cell_dict:
                         if random.randint(1, 2) % 2 == 0:
-                            cell_dict[pos].alive = True
+                            cell_dict[pos].give_life()
                         else:
-                            cell_dict[pos].alive = False
+                            cell_dict[pos].give_death()
                     cell_stage = 0
                 # Turbo mode
                 if keys[K_t] and not turbo:
