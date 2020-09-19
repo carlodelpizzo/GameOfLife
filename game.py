@@ -69,12 +69,11 @@ def game(screen_width, screen_height, rows, cols, ran=False):
 
         def give_life(self):
             self.alive = True
-            alive_cells.append(self.pos)
+            alive_cells[self.pos] = self
 
         def give_death(self):
             self.alive = False
-            if self.pos in alive_cells:
-                alive_cells.pop(alive_cells.index(self.pos))
+            alive_cells.pop(self.pos, None)
 
     def mouse_draw():
         mouse_pos = pygame.mouse.get_pos()
@@ -92,9 +91,12 @@ def game(screen_width, screen_height, rows, cols, ran=False):
         for p in alive_cells:
             if p not in next_stage:
                 next_stage[p] = cell_dict[p].alive_next_stage()
-            for np in cell_dict[p].neighbors:
-                if np in cell_dict and np not in next_stage:
-                    next_stage[np] = cell_dict[np].alive_next_stage()
+            for np in alive_cells[p].neighbors:
+                if np not in next_stage:
+                    if np in alive_cells:
+                        next_stage[np] = cell_dict[np].alive_next_stage()
+                    elif np in cell_dict:
+                        next_stage[np] = cell_dict[np].alive_next_stage()
         for p in next_stage:
             if next_stage[p]:
                 cell_dict[p].give_life()
@@ -142,7 +144,7 @@ def game(screen_width, screen_height, rows, cols, ran=False):
                         cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
 
     cell_dict = {}
-    alive_cells = []
+    alive_cells = {}
     cell_w = screen_width / cols
     cell_h = screen_height / rows
     for row in range(rows):
