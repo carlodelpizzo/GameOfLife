@@ -92,8 +92,8 @@ def game(screen_width, screen_height, rows, cols, ran=False):
             max_col = []
             max_row = []
             for p in cell_dict:
-                max_col.append(p[0])
-                max_row.append(p[1])
+                max_col.append(p[1])
+                max_row.append(p[0])
             max_col.sort(reverse=True)
             max_row.sort(reverse=True)
             max_col = int(max_col[0])
@@ -110,14 +110,14 @@ def game(screen_width, screen_height, rows, cols, ran=False):
                 add_rows = int(add_rows) + 1
             else:
                 add_rows = int(add_rows)
-            for r in range(max_row):
+            for r in range(max_row + 1):
                 for c in range(add_cols):
                     x_off = c * cell_w + max_x
                     y_off = r * cell_h
                     cell_p = (r, c + max_col)
                     cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
             for r in range(add_rows):
-                for c in range(max_col):
+                for c in range(max_col + add_cols):
                     x_off = c * cell_w
                     y_off = r * cell_h + max_y
                     cell_p = (r + max_row, c)

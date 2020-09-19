@@ -9,8 +9,8 @@ root.resizable(False, False)
 
 default_screen_width = 420
 default_screen_height = 420
-default_rows = 10
-default_cols = 10
+default_rows = 20
+default_cols = 20
 
 
 def start_game():
