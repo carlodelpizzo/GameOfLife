@@ -185,10 +185,10 @@ def game(screen_width, screen_height, rows, cols, ran):
                     slow = True
                 # Advance one stage
                 if (keys[K_RIGHT] or keys[K_n]) and pause:
-                    for i in range(len(cells)):
-                        cells[i].find_neighbors()
-                    for i in range(len(cells)):
-                        cells[i].advance()
+                    for cell in cells:
+                        cell.find_neighbors()
+                    for cell in cells:
+                        cell.advance()
                     cell_stage += 1
 
             # Key up events
