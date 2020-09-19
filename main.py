@@ -7,10 +7,10 @@ root.geometry("240x240")
 root.title("Life Launcher")
 root.resizable(False, False)
 
-default_screen_width = 700
-default_screen_height = 700
-default_rows = 40
-default_cols = 40
+default_screen_width = 420
+default_screen_height = 420
+default_rows = 10
+default_cols = 10
 
 
 def start_game():
