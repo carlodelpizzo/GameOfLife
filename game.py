@@ -115,13 +115,15 @@ def game(screen_width, screen_height, rows, cols, ran=False):
                     x_off = c * cell_w + max_x
                     y_off = r * cell_h
                     cell_p = (r, c + max_col)
-                    cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
+                    if cell_p not in cell_dict:
+                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
             for r in range(add_rows):
                 for c in range(max_col + add_cols):
                     x_off = c * cell_w
                     y_off = r * cell_h + max_y
                     cell_p = (r + max_row, c)
-                    cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
+                    if cell_p not in cell_dict:
+                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p)
 
     cell_dict = {}
     cell_w = screen_width / cols
