@@ -80,7 +80,7 @@ def start_game():
 
     if we_good:
         root.withdraw()
-        game(w, h, r, c, ran.get())
+        game(w, h, ran.get())
         root.deiconify()
     else:
         blink(width_entry, height_entry, rows_entry, cols_entry)
