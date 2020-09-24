@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+from datetime import datetime
 
 
 def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
@@ -186,6 +187,7 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
     removing = False
     running = True
     while running:
+        time_start = datetime.utcnow()
         # Draw PAUSED
         if paused:
             paused_txt = big_font.render('PAUSED', True, white)
@@ -294,6 +296,12 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
         display_stage = font.render(str(cell_stage), True, white)
         pygame.draw.rect(screen, black, (0, 0, display_stage.get_rect().width, display_stage.get_rect().height - 10))
         screen.blit(display_stage, (0, -5))
+
+        # Draw loop delay timer
+        loop_time_milliseconds = datetime.utcnow() - time_start
+        loop_time_milliseconds = loop_time_milliseconds.microseconds / 1000
+        if loop_time_milliseconds >= 1:
+            print('Loop time: ' + str(loop_time_milliseconds) + 'ms')
 
         if slow:
             clock.tick(slowed_rate)
