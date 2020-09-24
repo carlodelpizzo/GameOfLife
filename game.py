@@ -2,12 +2,8 @@ import pygame
 from pygame.locals import *
 import random
 
-paused = True
 
-
-def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
-    global paused
-
+def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
     pygame.init()
     # Initialize screen
     screen = pygame.display.set_mode((screen_width, screen_height), RESIZABLE)
@@ -19,12 +15,13 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
     fg_color = [50, 100, 200]
     divider_color = [25, 25, 25]
     divider_color_paused = [25, 50, 50]
-    if cell_color is None:
-        cell_color = fg_color
+    if alive_color is None:
+        alive_color = fg_color
     # Font
     font_size = 25
     font_face = "Helvetica"
     font = pygame.font.SysFont(font_face, font_size)
+    big_font = pygame.font.SysFont(font_face, 80)
 
     class Cell:
         def __init__(self, x: int, y: int, w: int, h: int, location, cell_color=None):
@@ -47,20 +44,18 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
                               (location[0] + 1, location[1] - 1)]
 
         def update_screen(self):
-            global paused
-
-            if self.alive and not paused:
+            if self.alive:
                 pygame.draw.rect(screen, black, (self.x, self.y, self.width, self.height))
                 pygame.draw.rect(screen, self.color, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
-            elif not self.alive and not paused:
+            elif not self.alive:
                 pygame.draw.rect(screen, divider_color, (self.x, self.y, self.width, self.height))
                 pygame.draw.rect(screen, black, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
-            elif self.alive and paused:
-                pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
-                pygame.draw.rect(screen, self.color, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
-            elif not self.alive and paused:
-                pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
-                pygame.draw.rect(screen, black, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
+            # elif self.alive and paused:
+            #     pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
+            #     pygame.draw.rect(screen, self.color, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
+            # elif not self.alive and paused:
+            #     pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
+            #     pygame.draw.rect(screen, black, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
 
         def alive_next_stage(self):
             friends = 0
@@ -152,14 +147,14 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
                     y_off = r * cell_h
                     cell_p = (r, c + max_col)
                     if cell_p not in cell_dict:
-                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p, cell_color)
+                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p, alive_color)
             for r in range(add_rows):
                 for c in range(max_col + add_cols):
                     x_off = c * cell_w
                     y_off = r * cell_h + max_y
                     cell_p = (r + max_row, c)
                     if cell_p not in cell_dict:
-                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p, cell_color)
+                        cell_dict[cell_p] = Cell(x_off, y_off, cell_w, cell_h, cell_p, alive_color)
 
     cell_dict = {}
     alive_cells = {}
@@ -170,7 +165,7 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
             x_offset = cell_w * col
             y_offset = cell_h * row
             cell_pos = (row, col)
-            cell_dict[cell_pos] = Cell(x_offset, y_offset, cell_w, cell_h, cell_pos, cell_color)
+            cell_dict[cell_pos] = Cell(x_offset, y_offset, cell_w, cell_h, cell_pos, alive_color)
     if ran:
         for pos in cell_dict:
             if random.randint(1, 2) % 2 == 0:
@@ -183,13 +178,29 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
     turbo_rate = 240
     slowed_rate = 10
     cell_stage = 0
+    paused = True
+    draw_once = True
     turbo = False
     slow = False
     drag_mouse = False
     removing = False
     running = True
-    draw_once = True
     while running:
+        # Draw PAUSED
+        if paused:
+            paused_txt = big_font.render('PAUSED', True, white)
+            screen.blit(paused_txt, (int(screen_width / 2) - 137,
+                                     int(screen_height / 2) - 147))
+            screen.blit(paused_txt, (int(screen_width / 2) - 137,
+                                     int(screen_height / 2) - 143))
+            screen.blit(paused_txt, (int(screen_width / 2) - 133,
+                                     int(screen_height / 2) - 147))
+            screen.blit(paused_txt, (int(screen_width / 2) - 133,
+                                     int(screen_height / 2) - 143))
+            paused_txt = big_font.render('PAUSED', True, black)
+            screen.blit(paused_txt, (int(screen_width / 2) - 135,
+                                     int(screen_height / 2) - 145))
+
         # Event Loop
         for event in pygame.event.get():
             # Close Window
@@ -209,6 +220,7 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
                     paused = True
                     draw_once = True
                 elif keys[K_SPACE] and paused:
+                    screen.fill(black)
                     paused = False
                     draw_once = True
                 # Kill all cells
@@ -216,6 +228,7 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
                     for pos in cell_dict:
                         cell_dict[pos].give_death()
                     cell_stage = 0
+                    draw_once = True
                 # Randomize cells
                 if keys[K_r] and paused:
                     for pos in cell_dict:
@@ -224,6 +237,7 @@ def game(screen_width, screen_height, rows, cols, ran=False, cell_color=None):
                         else:
                             cell_dict[pos].give_death()
                     cell_stage = 0
+                    draw_once = True
                 # Turbo mode
                 if keys[K_t] and not turbo:
                     turbo = True
