@@ -22,7 +22,6 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
     font_size = 25
     font_face = "Helvetica"
     font = pygame.font.SysFont(font_face, font_size)
-    big_font = pygame.font.SysFont(font_face, 80)
 
     class Cell:
         def __init__(self, x: int, y: int, w: int, h: int, location, cell_color=None):
@@ -51,12 +50,6 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
             elif not self.alive:
                 pygame.draw.rect(screen, divider_color, (self.x, self.y, self.width, self.height))
                 pygame.draw.rect(screen, black, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
-            # elif self.alive and paused:
-            #     pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
-            #     pygame.draw.rect(screen, self.color, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
-            # elif not self.alive and paused:
-            #     pygame.draw.rect(screen, divider_color_paused, (self.x, self.y, self.width, self.height))
-            #     pygame.draw.rect(screen, black, (self.x + 1, self.y + 1, self.width - 2, self.height - 2))
 
         def alive_next_stage(self):
             friends = 0
@@ -102,20 +95,20 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
 
     def advance_stage():
         next_stage = {}
-        for p in alive_cells:
-            if p not in next_stage:
-                next_stage[p] = cell_dict[p].alive_next_stage()
-            for np in alive_cells[p].neighbors:
-                if np not in next_stage:
-                    if np in alive_cells:
-                        next_stage[np] = alive_cells[np].alive_next_stage()
-                    elif np in cell_dict:
-                        next_stage[np] = cell_dict[np].alive_next_stage()
-        for p in next_stage:
-            if next_stage[p]:
-                cell_dict[p].give_life()
+        for cell_grid_pos in alive_cells:
+            if cell_grid_pos not in next_stage:
+                next_stage[cell_grid_pos] = cell_dict[cell_grid_pos].alive_next_stage()
+            for neighbor_pos in alive_cells[cell_grid_pos].neighbors:
+                if neighbor_pos not in next_stage:
+                    if neighbor_pos in alive_cells:
+                        next_stage[neighbor_pos] = alive_cells[neighbor_pos].alive_next_stage()
+                    elif neighbor_pos in cell_dict:
+                        next_stage[neighbor_pos] = cell_dict[neighbor_pos].alive_next_stage()
+        for cell_grid_pos in next_stage:
+            if next_stage[cell_grid_pos]:
+                cell_dict[cell_grid_pos].give_life()
             else:
-                cell_dict[p].give_death()
+                cell_dict[cell_grid_pos].give_death()
 
     def resize(new_width, new_height):
         if new_width == screen_width and new_height == screen_height:
@@ -188,20 +181,6 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
     running = True
     while running:
         time_start = datetime.utcnow()
-        # Draw PAUSED
-        if paused:
-            paused_txt = big_font.render('PAUSED', True, white)
-            screen.blit(paused_txt, (int(screen_width / 2) - 137,
-                                     int(screen_height / 2) - 147))
-            screen.blit(paused_txt, (int(screen_width / 2) - 137,
-                                     int(screen_height / 2) - 143))
-            screen.blit(paused_txt, (int(screen_width / 2) - 133,
-                                     int(screen_height / 2) - 147))
-            screen.blit(paused_txt, (int(screen_width / 2) - 133,
-                                     int(screen_height / 2) - 143))
-            paused_txt = big_font.render('PAUSED', True, black)
-            screen.blit(paused_txt, (int(screen_width / 2) - 135,
-                                     int(screen_height / 2) - 145))
 
         # Event Loop
         for event in pygame.event.get():
@@ -297,11 +276,21 @@ def game(screen_width, screen_height, rows, cols, ran=False, alive_color=None):
         pygame.draw.rect(screen, black, (0, 0, display_stage.get_rect().width, display_stage.get_rect().height - 10))
         screen.blit(display_stage, (0, -5))
 
-        # Draw loop delay timer
+        # Draw pause indicator
+        if paused:
+            pygame.draw.rect(screen, white, (5, display_stage.get_rect().height, 4, 25))
+            pygame.draw.rect(screen, white, (15, display_stage.get_rect().height, 4, 25))
+
+        # Print loop delay timer
         loop_time_milliseconds = datetime.utcnow() - time_start
         loop_time_milliseconds = loop_time_milliseconds.microseconds / 1000
-        if loop_time_milliseconds >= 1:
-            print('Loop time: ' + str(loop_time_milliseconds) + 'ms')
+        if loop_time_milliseconds >= 1.5:
+            if loop_time_milliseconds % 1 >= 0.5:
+                loop_time_milliseconds = int(loop_time_milliseconds) + 1
+                print('Loop time: ' + str(loop_time_milliseconds) + 'ms')
+            else:
+                loop_time_milliseconds = int(loop_time_milliseconds)
+                print('Loop time: ' + str(loop_time_milliseconds) + 'ms')
 
         if slow:
             clock.tick(slowed_rate)
